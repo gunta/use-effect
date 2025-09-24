@@ -1,0 +1,46 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Hero from '../components/Hero.astro';
+import Counter from '../components/Counter.astro';
+import WallOfShame from '../components/WallOfShame.astro';
+import CodeComparison from '../components/CodeComparison.astro';
+import CodeExamples from '../components/CodeExamples.astro';
+import { InteractiveCode } from '../components/InteractiveCode.tsx';
+import LearnEffect from '../components/LearnEffect.astro';
+import Download from '../components/Download.astro';
+import Testimonials from '../components/Testimonials.astro';
+---
+
+<Layout title="Don't useEffect, use Effect - Save Your Production">
+  <main class="bg-black text-white min-h-screen overflow-x-hidden">
+    <Hero />
+    <Counter />
+    <WallOfShame />
+    <CodeComparison />
+    <CodeExamples />
+    
+    <!-- Interactive TypeScript Demo -->
+    <section class="py-20 px-4">
+      <div class="max-w-4xl mx-auto">
+        <h2 class="text-4xl sm:text-5xl font-black text-center mb-8">
+          <span class="text-electric-blue">Experience Type Safety</span>
+        </h2>
+        <p class="text-xl text-gray-400 text-center mb-8">
+          See how TypeScript and Effect work together to prevent bugs before they happen
+        </p>
+        <InteractiveCode client:load />
+      </div>
+    </section>
+    
+    <Testimonials />
+    <LearnEffect />
+    <Download />
+  </main>
+</Layout>
+
+<style>
+  :global(html) {
+    background-color: black;
+    scroll-behavior: smooth;
+  }
+</style>

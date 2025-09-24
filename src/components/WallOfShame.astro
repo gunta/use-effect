@@ -1,0 +1,133 @@
+---
+import CodeBlockStatic from './CodeBlockStatic.astro';
+import { IconDisplay } from './IconDisplay.tsx';
+
+const horrorStories = [
+  {
+    title: "The Infinite Loop Classic",
+    code: `useEffect(() => {
+  setCount(count + 1); // 🔥 Infinite re-render
+}, [count]); // WHY GOD WHY`,
+    consequence: "CPU: 100% | Browser: Dead | Developer: Fired",
+    lang: "typescript" as const
+  },
+  {
+    title: "The Missing Dependency Disaster",
+    code: `useEffect(() => {
+  fetchUserData(userId);
+  // ESLint: userId is missing in deps
+}, []); // Ignored the warning 🤡`,
+    consequence: "Stale data for everyone!",
+    lang: "typescript" as const
+  },
+  {
+    title: "The Dashboard Destroyer",
+    code: `useEffect(() => {
+  fetchOrganizations();
+  // Object recreated every render
+}, [objectThatChangesEveryRender]);
+// API calls: ∞`,
+    consequence: "API overwhelmed, dashboard down",
+    lang: "typescript" as const
+  },
+  {
+    title: "The Memory Leak Masterpiece",
+    code: `useEffect(() => {
+  const interval = setInterval(() => {
+    updateData();
+  }, 100);
+  // Cleanup? Never heard of it
+}, []); // Memory leak goes brrr`,
+    consequence: "Chrome: 8GB RAM for a todo app",
+    lang: "typescript" as const
+  },
+  {
+    title: "The Race Condition Roulette",
+    code: `useEffect(() => {
+  fetch('/api/1').then(setData);
+  fetch('/api/2').then(setData);
+  fetch('/api/3').then(setData);
+}, []); // May the fastest win!`,
+    consequence: "Data integrity: Optional",
+    lang: "typescript" as const
+  },
+  {
+    title: "The Async Anarchist",
+    code: `useEffect(async () => { // 🚨 Can't be async!
+  const data = await fetchData();
+  setData(data);
+}, []); // Returns a Promise, not cleanup`,
+    consequence: "Console errors & broken cleanup",
+    lang: "typescript" as const
+  }
+];
+---
+
+<section class="py-20 px-4 bg-gradient-to-b from-black via-gray-900/20 to-black">
+  <div class="max-w-6xl mx-auto">
+    <h2 class="text-5xl sm:text-6xl md:text-7xl font-black text-center mb-4">
+      <span class="text-warning-red">HALL OF SHAME</span>
+    </h2>
+    <p class="text-xl text-gray-400 text-center mb-12">Real useEffect horrors that shipped to production</p>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {horrorStories.map((story) => (
+        <div class="space-y-3">
+          <h3 class="text-xl font-bold text-warning-red">{story.title}</h3>
+          <CodeBlockStatic 
+            code={story.code}
+            lang={story.lang}
+            variant="error"
+          />
+          <div class="flex items-center gap-2 text-sm">
+            <IconDisplay icon="alertCircle" className="text-warning-red" size={18} client:visible />
+            <span class="text-gray-400">{story.consequence}</span>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <div class="mt-12 text-center">
+      <div class="inline-block bg-warning-red/10 border border-warning-red/30 rounded-lg px-6 py-4">
+        <div class="flex items-center justify-center gap-3 mb-2">
+          <IconDisplay icon="alertCircle" className="text-yellow-500" size={28} client:visible />
+          <p class="text-2xl font-bold text-white">
+            Winner: <span class="text-warning-red">The Dashboard Destroyer</span>
+          </p>
+          <IconDisplay icon="alertCircle" className="text-yellow-500" size={28} client:visible />
+        </div>
+        <p class="text-gray-400">For outstanding achievement in accidental DDoS</p>
+      </div>
+    </div>
+
+    <!-- Bonus: The Ultimate Horror -->
+    <div class="mt-16 max-w-3xl mx-auto">
+      <div class="flex items-center justify-center gap-3 mb-6">
+        <IconDisplay icon="zap" className="text-warning-red" size={32} client:visible />
+        <h3 class="text-3xl font-bold text-warning-red">
+          THE ULTIMATE HORROR
+        </h3>
+        <IconDisplay icon="zap" className="text-warning-red" size={32} client:visible />
+      </div>
+      <CodeBlockStatic 
+        code={`// Found in production at a Fortune 500 company
+useEffect(() => {
+  const timer = setInterval(() => {
+    dispatch(fetchUserData());
+    dispatch(fetchNotifications());
+    dispatch(fetchAnalytics());
+    dispatch(updateSessionTime());
+  }, 1000); // Every. Single. Second. 
+  
+  // No cleanup function 🎪
+}, [dispatch]); // At least they got deps right? 🤷`}
+        lang="typescript"
+        title="The API Destroyer 9000™"
+        variant="error"
+      />
+      <p class="text-center mt-4 text-gray-400">
+        Estimated damage: <span class="text-warning-red font-bold">$2.3M in AWS bills</span>
+      </p>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,138 @@
+---
+import { createHighlighter } from 'shiki';
+import { createTwoslasher } from 'twoslash';
+
+interface Props {
+  code: string;
+  lang?: 'typescript' | 'tsx' | 'javascript' | 'jsx';
+  title?: string;
+  variant?: 'error' | 'success' | 'neutral';
+  showLineNumbers?: boolean;
+}
+
+const { 
+  code, 
+  lang = 'typescript', 
+  title, 
+  variant = 'neutral',
+  showLineNumbers = false 
+} = Astro.props;
+
+// Create highlighter
+const highlighter = await createHighlighter({
+  themes: ['github-dark-dimmed', 'github-light'],
+  langs: ['typescript', 'tsx', 'javascript', 'jsx'],
+});
+
+// Generate type information if TypeScript
+let typeInfo = null;
+if (lang === 'typescript' || lang === 'tsx') {
+  try {
+    const twoslasher = createTwoslasher();
+    typeInfo = twoslasher(code, lang);
+  } catch (e) {
+    // Ignore type errors for demo code
+  }
+}
+
+// Generate highlighted HTML
+const html = highlighter.codeToHtml(code, {
+  lang,
+  theme: 'github-dark-dimmed',
+  transformers: [
+    {
+      pre(node) {
+        // Add custom classes
+        node.properties.class = 'not-prose overflow-x-auto';
+      }
+    }
+  ]
+});
+
+const borderColor = variant === 'error' 
+  ? 'border-warning-red/30 hover:border-warning-red/50' 
+  : variant === 'success' 
+  ? 'border-green-400/30 hover:border-green-400/50'
+  : 'border-gray-700 hover:border-gray-600';
+
+const bgGradient = variant === 'error'
+  ? 'from-warning-red/5 to-transparent'
+  : variant === 'success'
+  ? 'from-green-400/5 to-transparent'
+  : 'from-gray-900/50 to-transparent';
+
+const titleColor = variant === 'error'
+  ? 'text-warning-red'
+  : variant === 'success'
+  ? 'text-green-400'
+  : 'text-gray-400';
+
+const lineNumbers = code.split('\n').length;
+---
+
+<div class={`group relative rounded-lg overflow-hidden border ${borderColor} bg-gradient-to-br ${bgGradient} transition-all duration-300`}>
+  {title && (
+    <div class="px-4 py-2 border-b border-gray-800/50 flex items-center justify-between bg-black/30">
+      <span class={`text-sm font-bold ${titleColor}`}>
+        {title}
+      </span>
+      <div class="flex gap-1.5 opacity-50 group-hover:opacity-100 transition-opacity">
+        <div class="w-3 h-3 rounded-full bg-red-500/70"></div>
+        <div class="w-3 h-3 rounded-full bg-yellow-500/70"></div>
+        <div class="w-3 h-3 rounded-full bg-green-500/70"></div>
+      </div>
+    </div>
+  )}
+  
+  <div class="relative">
+    {showLineNumbers && (
+      <div class="absolute left-0 top-0 h-full w-12 bg-black/20 flex flex-col items-end pr-3 pt-4 text-xs text-gray-600 select-none">
+        {Array.from({ length: lineNumbers }, (_, i) => (
+          <div class="leading-6 font-mono">{i + 1}</div>
+        ))}
+      </div>
+    )}
+    
+    <div class={`syntax-highlighted ${showLineNumbers ? 'pl-14' : ''} p-4 text-sm`}>
+      <Fragment set:html={html} />
+    </div>
+
+    {/* Add type hints as tooltips if available */}
+    {typeInfo && typeInfo.nodes && (
+      <div class="type-hints" data-type-info={JSON.stringify(typeInfo.nodes)}>
+        {typeInfo.nodes.map((node: any, i: number) => (
+          <span
+            class="type-hint-trigger"
+            data-hint-index={i}
+            style={`position: absolute; left: ${node.character}ch; top: ${node.line * 1.5}em;`}
+          />
+        ))}
+      </div>
+    )}
+  </div>
+</div>
+
+<style>
+  .syntax-highlighted :global(pre) {
+    background: transparent !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .syntax-highlighted :global(code) {
+    font-family: 'JetBrains Mono', Monaco, Consolas, monospace;
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+
+  /* Custom token colors for better contrast */
+  .syntax-highlighted :global(.line) {
+    display: inline-block;
+    width: 100%;
+  }
+
+  /* Hover effect for lines */
+  .syntax-highlighted :global(.line:hover) {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+</style>

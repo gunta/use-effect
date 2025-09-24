@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <!-- Black background -->
+  <rect width="1200" height="630" fill="#000000"/>
+  
+  <!-- Title text -->
+  <text x="600" y="200" font-family="Inter, Arial, sans-serif" font-size="80" font-weight="900" fill="#FFFFFF" text-anchor="middle">
+    Don't useEffect
+  </text>
+  
+  <text x="600" y="320" font-family="Inter, Arial, sans-serif" font-size="80" font-weight="900" fill="#10B981" text-anchor="middle">
+    use Effect
+  </text>
+  
+  <!-- Subtitle -->
+  <text x="600" y="420" font-family="Inter, Arial, sans-serif" font-size="36" fill="#9CA3AF" text-anchor="middle">
+    One space. Infinite clarity. Zero outages.
+  </text>
+  
+  <!-- Warning text -->
+  <text x="600" y="520" font-family="Inter, Arial, sans-serif" font-size="24" fill="#EF4444" text-anchor="middle">
+    Teaching AIs to code better than humans since 2024
+  </text>
+</svg>

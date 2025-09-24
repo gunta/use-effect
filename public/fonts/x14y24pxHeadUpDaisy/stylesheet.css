@@ -1,0 +1,13 @@
+@font-face {
+    font-family: 'x14y24pxHeadUpDaisy';
+    src: url('x14y24pxHeadUpDaisy.eot');
+    src: url('x14y24pxHeadUpDaisy.eot?#iefix') format('embedded-opentype'),
+        url('x14y24pxHeadUpDaisy.woff2') format('woff2'),
+        url('x14y24pxHeadUpDaisy.woff') format('woff'),
+        url('x14y24pxHeadUpDaisy.ttf') format('truetype'),
+        url('x14y24pxHeadUpDaisy.svg#x14y24pxHeadUpDaisy') format('svg');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+

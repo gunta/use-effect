@@ -1,0 +1,37 @@
+{
+  "name": "lonely-luminosity",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/react": "^4.3.1",
+    "@react-three/drei": "^10.7.6",
+    "@react-three/fiber": "^9.3.0",
+    "@ridemountainpig/svgl-react": "^1.0.12",
+    "@tailwindcss/vite": "^4.1.13",
+    "astro": "^5.13.11",
+    "framer-motion": "^12.23.21",
+    "gsap": "^3.13.0",
+    "lucide-react": "^0.544.0",
+    "motion-react": "^0.15.0-alpha.1",
+    "ogl": "^1.0.11",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "shiki": "^1.24.2",
+    "tailwindcss": "^4.1.13",
+    "three": "^0.180.0",
+    "twoslash": "^0.3.4",
+    "twoslash-vue": "^0.3.4"
+  },
+  "devDependencies": {
+    "@types/node": "^24.5.2",
+    "@types/react": "^19.1.13",
+    "@types/react-dom": "^19.1.9",
+    "tsx": "^4.20.5"
+  }
+}

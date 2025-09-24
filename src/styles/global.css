@@ -1,0 +1,71 @@
+@import "tailwindcss";
+
+/* Custom pixel font for code */
+@font-face {
+  font-family: 'x14y24pxHeadUpDaisy';
+  src: url('/fonts/x14y24pxHeadUpDaisy/x14y24pxHeadUpDaisy.woff2') format('woff2'),
+       url('/fonts/x14y24pxHeadUpDaisy/x14y24pxHeadUpDaisy.woff') format('woff'),
+       url('/fonts/x14y24pxHeadUpDaisy/x14y24pxHeadUpDaisy.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Global font settings */
+* {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+code, pre, .font-mono {
+  font-family: 'x14y24pxHeadUpDaisy', 'JetBrains Mono', 'SF Mono', Consolas, monospace !important;
+  font-size: 0.95em; /* Slightly reduce size as pixel fonts can appear larger */
+  letter-spacing: 0.05em; /* Add slight spacing for better readability */
+}
+
+/* Inter font features for better typography */
+body {
+  font-feature-settings: 'cv01' 1, 'cv02' 1, 'cv03' 1, 'cv04' 1, 'ss01' 1, 'ss02' 1, 'ss03' 1, 'zero' 1, 'salt' 1;
+  letter-spacing: -0.011em;
+  text-rendering: optimizeLegibility;
+}
+
+/* Headings with tighter tracking */
+h1, h2, h3, h4, h5, h6 {
+  letter-spacing: -0.03em;
+  font-weight: 900;
+}
+
+/* Custom animations for the campaign */
+@keyframes glitch {
+  0%, 100% { 
+    transform: translate(0);
+    text-shadow: 2px 2px 0 #ef4444, -2px -2px 0 #0ea5e9;
+  }
+  20% { 
+    transform: translate(-2px, 2px);
+    text-shadow: 2px 2px 0 #0ea5e9, -2px -2px 0 #ef4444;
+  }
+  40% { 
+    transform: translate(-2px, -2px);
+    text-shadow: -2px 2px 0 #ef4444, 2px -2px 0 #0ea5e9;
+  }
+  60% { 
+    transform: translate(2px, 2px);
+    text-shadow: 2px -2px 0 #0ea5e9, -2px 2px 0 #ef4444;
+  }
+  80% { 
+    transform: translate(2px, -2px);
+    text-shadow: -2px -2px 0 #ef4444, 2px 2px 0 #0ea5e9;
+  }
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Selection color */
+::selection {
+  background: #0ea5e9;
+  color: #000;
+}

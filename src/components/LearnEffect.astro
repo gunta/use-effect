@@ -1,0 +1,264 @@
+---
+import { Image } from 'astro:assets';
+import { IconDisplay } from './IconDisplay.tsx';
+import { IconButton } from './IconButton.tsx';
+import ReactLogo from '../images/React_dark.svg';
+import EffectLogo from '../images/Effect TS_dark.svg';
+
+const resources = [
+  {
+    title: "Effect for Domains at Vercel",
+    speaker: "Dillon Mulroy",
+    event: "Effect Days 2025",
+    description: "Type-driven approach, structured concurrency, and best practices for building scalable, reliable systems in TypeScript.",
+    url: "https://www.youtube.com/watch?v=VZpr91dU03c",
+    type: "talk",
+    duration: "Conference Talk"
+  },
+  {
+    title: "Effect on the Frontend: When, Why, How",
+    speaker: "Sandro Maglione", 
+    event: "Effect Days 2025",
+    description: "Integration of Effect in frontend development, detailing when, how, and why to use it effectively in real-world applications.",
+    url: "https://www.youtube.com/watch?v=G_jp87gxILE",
+    type: "talk",
+    duration: "Conference Talk"
+  },
+  {
+    title: "The Simple Secret Behind Effect's Power",
+    speaker: "Kit Langton",
+    description: "Amazing ASMR learning experience that reveals the fundamental concepts that make Effect so powerful.",
+    url: "https://www.youtube.com/watch?v=F5aWLtEdNjE",
+    type: "video",
+    duration: "Deep Dive"
+  },
+  {
+    title: "Claude Code from Scratch with Effect",
+    speaker: "Kit Langton",
+    description: "Build real applications from scratch using Effect-TS with AI assistance.",
+    url: "https://www.youtube.com/watch?v=aueu9lm2ubo",
+    type: "video",
+    duration: "Tutorial"
+  },
+  {
+    title: "Visual Effect",
+    speaker: "Kit Langton",
+    description: "Interactive visual playground to understand Effect concepts through beautiful visualizations.",
+    url: "https://effect.kitlangton.com/",
+    type: "interactive",
+    duration: "Interactive"
+  }
+];
+
+const getTypeColor = (type: string) => {
+  switch (type) {
+    case 'talk': return 'text-electric-blue border-electric-blue/30 bg-electric-blue/10';
+    case 'video': return 'text-green-400 border-green-400/30 bg-green-400/10';
+    case 'interactive': return 'text-purple-400 border-purple-400/30 bg-purple-400/10';
+    default: return 'text-gray-400 border-gray-600 bg-gray-900';
+  }
+};
+
+const getTypeIcon = (type: string) => {
+  switch (type) {
+    case 'talk': return 'external';
+    case 'video': return 'external';
+    case 'interactive': return 'zap';
+    default: return 'book';
+  }
+};
+---
+
+<section class="py-20 px-4 bg-gradient-to-b from-black via-gray-900/10 to-black">
+  <div class="max-w-6xl mx-auto">
+    <div class="flex flex-col items-center mb-4">
+      <Image 
+        src={EffectLogo} 
+        alt="Effect-TS" 
+        width={100} 
+        height={100}
+        class="mb-6"
+      />
+      <h2 class="text-5xl sm:text-6xl md:text-7xl font-black text-center">
+        <span class="text-green-400">LEARN</span> <span class="text-white">EFFECT</span>
+      </h2>
+    </div>
+    <p class="text-xl text-gray-400 text-center mb-12">
+      From conference talks to interactive playgrounds - master Effect-TS
+    </p>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+      {resources.map((resource) => (
+        <a 
+          href={resource.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="group relative block p-6 bg-gradient-to-br from-gray-900/50 to-black border border-gray-700 hover:border-gray-600 rounded-lg transition-all hover:transform hover:scale-[1.02]"
+        >
+          <!-- Type Badge -->
+          <div class={`absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-bold border ${getTypeColor(resource.type)}`}>
+            {resource.duration}
+          </div>
+
+          <div class="space-y-3">
+            <h3 class="text-xl font-bold text-white group-hover:text-green-400 transition-colors pr-24">
+              {resource.title}
+            </h3>
+            
+            <div class="flex items-center gap-3 text-sm">
+              <span class="text-electric-blue font-semibold">{resource.speaker}</span>
+              {resource.event && (
+                <>
+                  <span class="text-gray-600">•</span>
+                  <span class="text-gray-400">{resource.event}</span>
+                </>
+              )}
+            </div>
+
+            <p class="text-gray-400 text-sm leading-relaxed">
+              {resource.description}
+            </p>
+
+            <div class="flex items-center gap-2 text-gray-500 group-hover:text-electric-blue transition-colors">
+              <span class="text-sm">Watch now</span>
+              <IconDisplay icon="arrow" className="w-4 h-4" size={16} client:visible />
+            </div>
+          </div>
+
+          <!-- Hover effect overlay -->
+          <div class="absolute inset-0 bg-gradient-to-br from-green-400/5 to-electric-blue/5 opacity-0 group-hover:opacity-100 rounded-lg transition-opacity pointer-events-none"></div>
+        </a>
+      ))}
+    </div>
+
+    <!-- Featured Resource -->
+    <div class="mt-12 p-8 bg-gradient-to-r from-purple-500/10 via-electric-blue/10 to-green-400/10 rounded-lg border border-gray-700">
+      <div class="flex items-center gap-3 mb-4">
+        <IconDisplay icon="zap" className="text-purple-400" size={32} client:visible />
+        <h3 class="text-2xl font-bold text-white">
+          Start Your Journey
+        </h3>
+      </div>
+      <p class="text-lg text-gray-300 mb-6">
+        The best way to learn Effect is to see it in action. Start with Kit Langton's Visual Effect playground
+        to understand the concepts interactively, then dive into the conference talks to see real-world applications.
+      </p>
+      <div class="flex flex-wrap gap-4">
+        <IconButton
+          icon="zap"
+          label="Visual Effect Playground"
+          href="https://effect.kitlangton.com/"
+          variant="primary"
+          client:load
+        />
+        <IconButton
+          icon="book"
+          label="Official Documentation"
+          href="https://effect.website"
+          variant="secondary"
+          client:load
+        />
+      </div>
+    </div>
+
+    <!-- Learning Path -->
+    <div class="mt-12 space-y-6">
+      <div class="flex items-center justify-center gap-3 mb-8">
+        <IconDisplay icon="book" className="text-white" size={32} client:visible />
+        <h3 class="text-3xl font-bold text-white">
+          Suggested Learning Path
+        </h3>
+      </div>
+      
+      <div class="space-y-4 max-w-3xl mx-auto">
+        <div class="flex gap-4 items-start">
+          <div class="w-8 h-8 rounded-full bg-warning-red text-black font-bold flex items-center justify-center flex-shrink-0 mt-1">
+            1
+          </div>
+          <div class="flex-1">
+            <div class="flex items-center gap-3 mb-1">
+              <Image 
+                src={ReactLogo} 
+                alt="React" 
+                width={24} 
+                height={24}
+                class="opacity-50"
+              />
+              <h4 class="text-lg font-bold text-warning-red">Understand the Problem</h4>
+            </div>
+            <p class="text-gray-400">Read React's official "You Might Not Need an Effect" guide to understand what's wrong with useEffect</p>
+          </div>
+        </div>
+
+        <div class="flex gap-4 items-start">
+          <div class="w-8 h-8 rounded-full bg-purple-400 text-black font-bold flex items-center justify-center flex-shrink-0 mt-1">
+            2
+          </div>
+          <div class="flex-1">
+            <div class="flex items-center gap-3 mb-1">
+              <Image 
+                src={EffectLogo} 
+                alt="Effect-TS" 
+                width={24} 
+                height={24}
+                class="opacity-70"
+              />
+              <h4 class="text-lg font-bold text-purple-400">Explore Visually</h4>
+            </div>
+            <p class="text-gray-400">Use Kit Langton's Visual Effect playground to see Effect concepts in action</p>
+          </div>
+        </div>
+
+        <div class="flex gap-4 items-start">
+          <div class="w-8 h-8 rounded-full bg-electric-blue text-black font-bold flex items-center justify-center flex-shrink-0 mt-1">
+            3
+          </div>
+          <div class="flex-1">
+            <div class="flex items-center gap-3 mb-1">
+              <Image 
+                src={EffectLogo} 
+                alt="Effect-TS" 
+                width={24} 
+                height={24}
+                class="opacity-80"
+              />
+              <h4 class="text-lg font-bold text-electric-blue">Learn from Experts</h4>
+            </div>
+            <p class="text-gray-400">Watch the Effect Days talks to understand real-world applications and best practices</p>
+          </div>
+        </div>
+
+        <div class="flex gap-4 items-start">
+          <div class="w-8 h-8 rounded-full bg-green-400 text-black font-bold flex items-center justify-center flex-shrink-0 mt-1">
+            4
+          </div>
+          <div class="flex-1">
+            <div class="flex items-center gap-3 mb-1">
+              <Image 
+                src={EffectLogo} 
+                alt="Effect-TS" 
+                width={24} 
+                height={24}
+              />
+              <h4 class="text-lg font-bold text-green-400">Build Something</h4>
+            </div>
+            <p class="text-gray-400">Follow "Claude Code from Scratch" to build a real application with Effect</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="mt-16 text-center p-8 bg-black/50 rounded-lg border border-gray-800">
+      <p class="text-2xl font-bold text-white mb-2">
+        Ready to Write Better Code?
+      </p>
+      <p class="text-lg text-gray-400">
+        Join thousands of developers who've already made the switch from useEffect to Effect.
+      </p>
+      <p class="text-green-400 font-bold mt-4 text-xl">
+        Your production environment is waiting.
+      </p>
+    </div>
+  </div>
+</section>

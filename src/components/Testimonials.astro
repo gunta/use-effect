@@ -1,0 +1,101 @@
+---
+import { Image } from 'astro:assets';
+import { IconDisplay } from './IconDisplay.tsx';
+import ChromeLogo from '../images/chrome.svg';
+
+const testimonials = [
+  {
+    name: "Anonymous Engineer",
+    role: "Major Tech Company",
+    message: "I wish I knew about Effect-TS before the incident",
+    icon: "alertCircle" as const,
+    iconColor: "text-warning-red"
+  },
+  {
+    name: "React Developer",
+    role: "Recovering useEffect Addict",
+    message: "I haven't had a memory leak in 3 months. My therapist is proud.",
+    icon: "check" as const,
+    iconColor: "text-green-400"
+  },
+  {
+    name: "Senior Architect",
+    role: "Big Tech Company",
+    message: "We replaced 2000 lines of useEffect with 50 lines of Effect. My team can see their families again.",
+    icon: "trending" as const,
+    iconColor: "text-electric-blue"
+  },
+  {
+    name: "GitHub Copilot",
+    role: "AI Assistant",
+    message: "I've been suggesting useEffect everywhere. I'm so sorry. Please forgive me.",
+    icon: "alertCircle" as const,
+    iconColor: "text-purple-400"
+  },
+  {
+    name: "Dan Abramov",
+    role: "Not Actually Dan",
+    message: "useEffect was a mistake. There, I said it.",
+    icon: "x" as const,
+    iconColor: "text-warning-red"
+  },
+  {
+    name: "Your Browser",
+    role: "Chrome DevTools Console",
+    message: "Thank you for finally stopping the infinite loops. My CPU can rest now.",
+    icon: "zap" as const,
+    iconColor: "text-green-400",
+    isBrowser: true
+  }
+];
+---
+
+<section class="py-20 px-4 bg-gradient-to-b from-black via-gray-900/10 to-black">
+  <div class="max-w-6xl mx-auto">
+    <h2 class="text-5xl sm:text-6xl md:text-7xl font-black text-center mb-4">
+      <span class="text-white">TESTIMONIALS</span>
+    </h2>
+    <p class="text-xl text-gray-400 text-center mb-12">From developers who survived useEffect hell</p>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {testimonials.map((testimonial) => (
+        <div class="bg-gray-900/30 border border-gray-800 rounded-lg p-6 hover:border-electric-blue/30 transition-all hover:transform hover:scale-105">
+          <div class="mb-4">
+            {testimonial.isBrowser ? (
+              <Image
+                src={ChromeLogo}
+                alt="Chrome Browser"
+                width={40}
+                height={40}
+                class="inline-block"
+              />
+            ) : (
+              <IconDisplay 
+                icon={testimonial.icon} 
+                className={testimonial.iconColor} 
+                size={40} 
+                client:visible 
+              />
+            )}
+          </div>
+          <p class="text-lg text-white mb-4 italic">"{testimonial.message}"</p>
+          <div>
+            <p class="font-bold text-electric-blue">{testimonial.name}</p>
+            <p class="text-sm text-gray-500">{testimonial.role}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <div class="mt-16 text-center">
+      <div class="inline-block bg-gradient-to-r from-warning-red/20 to-electric-blue/20 rounded-lg p-8 border border-gray-800">
+        <p class="text-3xl font-bold text-white mb-2">Breaking News:</p>
+        <p class="text-xl text-gray-300">
+          React team reportedly considering renaming useEffect to<br/>
+          <span class="text-warning-red font-mono text-2xl">useFoot</span><br/>
+          <span class="text-gray-500 text-base">"Because you'll shoot yourself in it"</span>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>

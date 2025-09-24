@@ -1,0 +1,220 @@
+---
+import { Image } from 'astro:assets';
+import CodeBlockStatic from './CodeBlockStatic.astro';
+import ReactLogo from '../images/React_dark.svg';
+import EffectLogo from '../images/Effect TS_dark.svg';
+
+const virginCode = `// 🤮 React Developer's Nightmare
+function UserProfile({ userId }: { userId: string }) {
+  const [user, setUser] = useState<User | null>(null);
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    
+    async function fetchData() {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        const userRes = await fetch(\`/api/users/\${userId}\`);
+        if (!cancelled) {
+          const userData = await userRes.json();
+          setUser(userData);
+        }
+        
+        const postsRes = await fetch(\`/api/posts?userId=\${userId}\`);
+        if (!cancelled) {
+          const postsData = await postsRes.json();
+          setPosts(postsData);
+        }
+      } catch (err) {
+        if (!cancelled) {
+          setError(err.message);
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    }
+    
+    fetchData();
+    
+    return () => {
+      cancelled = true; // Will this work? Who knows! 🎲
+    };
+  }, [userId]); // Pray you didn't forget a dependency 🙏
+
+  // Error handling? Race conditions? 
+  // That's a problem for future you!
+  return <div>...</div>;
+}`;
+
+const chadCode = `// 💚 Effect-TS: How adults handle side effects
+import { Effect, pipe } from 'effect'
+
+const fetchUserWithPosts = (userId: string) =>
+  pipe(
+    Effect.all({
+      user: fetchUser(userId),
+      posts: fetchUserPosts(userId)
+    }, { concurrency: 2 }),
+    Effect.retry(retryPolicy),
+    Effect.timeout('5 seconds'),
+    Effect.catchAll(error =>
+      Effect.succeed({
+        user: null,
+        posts: [],
+        error: error.message
+      })
+    )
+  )
+
+// That's it. That's the whole thing.
+// No cleanup. No race conditions. No prayers.
+// Just pure, functional elegance.
+
+// Use it anywhere:
+const result = await Effect.runPromise(
+  fetchUserWithPosts('123')
+)
+
+// Sleep peacefully knowing:
+// ✅ Automatic resource management
+// ✅ Built-in error handling
+// ✅ Retry logic included
+// ✅ Timeout handling
+// ✅ Concurrent requests
+// ✅ Type-safe everything`;
+---
+
+<section class="py-20 px-4">
+  <div class="max-w-6xl mx-auto">
+    <h2 class="text-5xl sm:text-6xl md:text-7xl font-black text-center mb-4">
+      <div class="flex flex-col lg:flex-row items-center justify-center gap-8">
+        <div class="flex items-center gap-4">
+          <span>VIRGIN</span>
+          <Image 
+            src={ReactLogo} 
+            alt="React" 
+            width={50} 
+            height={50}
+            class="opacity-50 inline-block"
+          />
+          <span class="text-warning-red">useEffect</span>
+        </div>
+        <span class="text-gray-500 text-3xl">vs</span>
+        <div class="flex items-center gap-4">
+          <span>CHAD</span>
+          <Image 
+            src={EffectLogo} 
+            alt="Effect-TS" 
+            width={50} 
+            height={50}
+            class="inline-block"
+          />
+          <span class="text-green-400">Effect</span>
+        </div>
+      </div>
+    </h2>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-12">
+      <!-- Virgin useEffect -->
+      <div class="relative">
+        <div class="absolute -top-4 -left-4 text-6xl opacity-20">😰</div>
+        <div class="space-y-4">
+          <div class="flex items-center gap-3 mb-4">
+            <Image 
+              src={ReactLogo} 
+              alt="React" 
+              width={40} 
+              height={40}
+              class="opacity-60"
+            />
+            <h3 class="text-2xl font-bold text-warning-red">The Virgin useEffect</h3>
+          </div>
+          
+          <CodeBlockStatic 
+            code={virginCode}
+            lang="tsx"
+            title="components/UserProfile.tsx"
+            variant="error"
+          />
+          
+          <div class="space-y-2 p-4 bg-black/30 rounded-lg border border-warning-red/20">
+            <p class="text-warning-red flex items-center gap-2">
+              <span class="text-xl">❌</span> Dependency array roulette
+            </p>
+            <p class="text-warning-red flex items-center gap-2">
+              <span class="text-xl">❌</span> Manual cleanup tracking
+            </p>
+            <p class="text-warning-red flex items-center gap-2">
+              <span class="text-xl">❌</span> Race condition paradise
+            </p>
+            <p class="text-warning-red flex items-center gap-2">
+              <span class="text-xl">❌</span> Error handling nightmare
+            </p>
+            <p class="text-warning-red flex items-center gap-2">
+              <span class="text-xl">❌</span> "Did I forget to cleanup?"
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chad Effect -->
+      <div class="relative">
+        <div class="absolute -top-4 -right-4 text-6xl opacity-20">😎</div>
+        <div class="space-y-4">
+          <div class="flex items-center gap-3 mb-4">
+            <Image 
+              src={EffectLogo} 
+              alt="Effect-TS" 
+              width={40} 
+              height={40}
+              class="opacity-90"
+            />
+            <h3 class="text-2xl font-bold text-green-400">The Chad Effect</h3>
+          </div>
+          
+          <CodeBlockStatic 
+            code={chadCode}
+            lang="typescript"
+            title="services/userService.ts"
+            variant="success"
+          />
+          
+          <div class="space-y-2 p-4 bg-black/30 rounded-lg border border-green-400/20">
+            <p class="text-green-400 flex items-center gap-2">
+              <span class="text-xl">✅</span> Composable and testable
+            </p>
+            <p class="text-green-400 flex items-center gap-2">
+              <span class="text-xl">✅</span> Automatic resource management
+            </p>
+            <p class="text-green-400 flex items-center gap-2">
+              <span class="text-xl">✅</span> Built-in retry & timeout
+            </p>
+            <p class="text-green-400 flex items-center gap-2">
+              <span class="text-xl">✅</span> Type-safe error handling
+            </p>
+            <p class="text-green-400 flex items-center gap-2">
+              <span class="text-xl">✅</span> Your CEO will never know
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-12 text-center p-8 bg-gradient-to-r from-electric-blue/10 via-purple-500/10 to-green-400/10 rounded-lg border border-gray-800">
+      <p class="text-3xl font-bold text-white mb-4">
+        The Choice is Clear
+      </p>
+      <p class="text-xl text-gray-300">
+        <span class="text-warning-red font-bold">useEffect</span>: Write complex cleanup and pray it works<br/>
+        <span class="text-green-400 font-bold">Effect</span>: Write business logic and ship with confidence
+      </p>
+    </div>
+  </div>
+</section>
