@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 import { GlitchText } from './GlitchText.tsx';
 import { ShaderBackground } from './ShaderBackground.tsx';
+import LightRays from './LightRays.tsx';
 import { IconDisplay } from './IconDisplay.tsx';
 import ReactLogo from '../images/React_dark.svg';
 import EffectLogo from '../images/Effect TS_dark.svg';
@@ -10,6 +11,23 @@ import EffectLogo from '../images/Effect TS_dark.svg';
 <section class="min-h-screen flex flex-col items-center justify-center relative px-4 py-20">
   <!-- Shader background -->
   <ShaderBackground client:load />
+
+  <!-- Light rays overlay -->
+  <div class="absolute inset-0 pointer-events-none">
+    <LightRays
+      client:visible
+      raysOrigin="top-center"
+      raysColor="#00ffff"
+      raysSpeed={1.5}
+      lightSpread={0.8}
+      rayLength={1.2}
+      followMouse={true}
+      mouseInfluence={0.1}
+      noiseAmount={0.1}
+      distortion={0.05}
+      className="hero-light-rays"
+    />
+  </div>
   
   <!-- Glitch background effect -->
   <div class="absolute inset-0 overflow-hidden pointer-events-none">
@@ -106,6 +124,11 @@ import EffectLogo from '../images/Effect TS_dark.svg';
       rgba(14, 165, 233, 0.03) 4px
     );
     animation: glitch-lines 8s linear infinite;
+  }
+
+  :global(.hero-light-rays) {
+    opacity: 0.65;
+    mix-blend-mode: screen;
   }
 
   @keyframes glitch-lines {

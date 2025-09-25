@@ -63,7 +63,7 @@ export const InteractiveCode: React.FC = () => {
     <div className="relative rounded-lg overflow-hidden border border-gray-700 bg-gradient-to-br from-gray-900 to-black">
       <div className="px-4 py-2 border-b border-gray-800 flex items-center justify-between bg-black/50">
         <span className="text-sm font-bold text-electric-blue">
-          Interactive TypeScript - Hover for Types!
+          TypeScript
         </span>
         <div className="flex gap-1.5">
           <div className="w-3 h-3 rounded-full bg-red-500/70"></div>

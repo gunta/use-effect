@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { createHighlighter, bundledLanguages, bundledThemes } from 'shiki';
-import { createTwoslasher } from 'twoslash';
+import { transformerTwoslash } from '@shikijs/twoslash';
+import '@shikijs/twoslash/style-rich.css';
 import { motion } from 'framer-motion';
+import { getHighlighter } from '../lib/highlighter';
 
 interface CodeBlockProps {
   code: string;
@@ -10,6 +11,7 @@ interface CodeBlockProps {
   theme?: 'dark' | 'light';
   title?: string;
   variant?: 'error' | 'success';
+  useTwoslash?: boolean;
 }
 
 export const CodeBlock: React.FC<CodeBlockProps> = ({ 
@@ -18,7 +20,8 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
   showLineNumbers = false,
   theme = 'dark',
   title,
-  variant
+  variant,
+  useTwoslash = false,
 }) => {
   const [html, setHtml] = useState<string>('');
   const [typeInfo, setTypeInfo] = useState<any>(null);
@@ -29,37 +32,42 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
   useEffect(() => {
     async function highlight() {
       try {
-        const highlighter = await createHighlighter({
-          themes: ['github-dark', 'github-light'],
-          langs: Object.keys(bundledLanguages),
-        });
+        const highlighter = await getHighlighter();
 
-        // Get type information using TwoSlash
-        if (lang === 'typescript' || lang === 'tsx') {
-          try {
-            const twoslasher = createTwoslasher();
-            const result = twoslasher(code, lang);
-            setTypeInfo(result);
-          } catch (e) {
-            // Type checking failed - that's okay for demo code
-            console.log('TwoSlash error:', e);
-          }
-        }
+        let twoslashMeta: any = null;
+        const transformers = useTwoslash
+          ? [
+              transformerTwoslash({
+                rendererRich: {
+                  classExtra: 'twoslash-rich',
+                },
+              }),
+              {
+                name: 'collect-twoslash-meta',
+                pre() {
+                  twoslashMeta = this.meta.twoslash ?? null;
+                },
+              },
+            ]
+          : undefined;
 
         const highlighted = highlighter.codeToHtml(code, {
           lang,
           theme: theme === 'dark' ? 'github-dark' : 'github-light',
+          ...(transformers ? { transformers } : {}),
         });
 
+        setTypeInfo(useTwoslash ? twoslashMeta : null);
         setHtml(highlighted);
       } catch (error) {
         console.error('Highlighting failed:', error);
         setHtml(`<pre><code>${code}</code></pre>`);
+        setTypeInfo(null);
       }
     }
 
     highlight();
-  }, [code, lang, theme]); // Dependencies that will cause re-renders! 🤦
+  }, [code, lang, theme, useTwoslash]); // Dependencies that will cause re-renders! 🤦
 
   const borderColor = variant === 'error' 
     ? 'border-warning-red/30' 

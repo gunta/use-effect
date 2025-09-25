@@ -77,7 +77,7 @@ export default {
         },
       },
       fontFamily: {
-        'mono': ['JetBrains Mono', 'Monaco', 'Consolas', 'monospace'],
+        'mono': ['x14y24pxHeadUpDaisy', 'JetBrains Mono', 'SF Mono', 'Consolas', 'monospace'],
         'bold': ['Arial Black', 'Helvetica', 'sans-serif'],
       },
     },

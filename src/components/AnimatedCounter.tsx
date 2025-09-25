@@ -11,40 +11,63 @@ export const AnimatedCounter: React.FC<CounterProps> = ({ type }) => {
   const [globalCounter, setGlobalCounter] = useState(2847293847);
   const [moneyCounter, setMoneyCounter] = useState(847);
 
-  // Global counter animation - NO useEffect needed! Using requestAnimationFrame
-  if (type === 'global') {
-    let animationId: number;
+  useEffect(() => {
+    if (type !== 'global' || typeof window === 'undefined') {
+      return;
+    }
+
+    let animationId = 0;
+
     const animate = () => {
       setGlobalCounter(prev => prev + Math.floor(Math.random() * 1000) + 500);
-      animationId = requestAnimationFrame(animate);
+      animationId = window.requestAnimationFrame(animate);
     };
-    
-    // Start animation on mount
-    if (typeof window !== 'undefined') {
-      animate();
-      // Cleanup would go in a return statement if this were useEffect
-      // But we're NOT using useEffect! 😎
-    }
-  }
 
-  // Money counter animation
-  if (type === 'money') {
-    if (typeof window !== 'undefined') {
-      setInterval(() => {
-        setMoneyCounter(prev => prev + Math.random() * 0.1);
-      }, 1000);
-    }
-  }
+    animationId = window.requestAnimationFrame(animate);
 
-  // Incident counter reset animation  
-  if (type === 'incident') {
-    if (typeof window !== 'undefined') {
-      setInterval(() => {
-        setIncidentCounter(1);
-        setTimeout(() => setIncidentCounter(0), 2000);
-      }, 10000);
+    return () => {
+      window.cancelAnimationFrame(animationId);
+    };
+  }, [type]);
+
+  useEffect(() => {
+    if (type !== 'money' || typeof window === 'undefined') {
+      return;
     }
-  }
+
+    const intervalId = window.setInterval(() => {
+      setMoneyCounter(prev => prev + Math.random() * 0.1);
+    }, 1000);
+
+    return () => {
+      window.clearInterval(intervalId);
+    };
+  }, [type]);
+
+  useEffect(() => {
+    if (type !== 'incident' || typeof window === 'undefined') {
+      return;
+    }
+
+    let timeoutId = 0;
+
+    const triggerReset = () => {
+      setIncidentCounter(1);
+      timeoutId = window.setTimeout(() => setIncidentCounter(0), 2000);
+    };
+
+    triggerReset();
+
+    const intervalId = window.setInterval(() => {
+      window.clearTimeout(timeoutId);
+      triggerReset();
+    }, 10000);
+
+    return () => {
+      window.clearInterval(intervalId);
+      window.clearTimeout(timeoutId);
+    };
+  }, [type]);
 
   const configs = {
     incident: {

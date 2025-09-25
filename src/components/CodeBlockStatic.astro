@@ -1,6 +1,7 @@
 ---
-import { createHighlighter } from 'shiki';
-import { createTwoslasher } from 'twoslash';
+import { transformerTwoslash } from '@shikijs/twoslash';
+import '@shikijs/twoslash/style-rich.css';
+import { getHighlighter } from '../lib/highlighter';
 
 interface Props {
   code: string;
@@ -8,6 +9,7 @@ interface Props {
   title?: string;
   variant?: 'error' | 'success' | 'neutral';
   showLineNumbers?: boolean;
+  useTwoslash?: boolean;
 }
 
 const { 
@@ -15,39 +17,60 @@ const {
   lang = 'typescript', 
   title, 
   variant = 'neutral',
-  showLineNumbers = false 
+  showLineNumbers = false,
+  useTwoslash = false,
 } = Astro.props;
 
-// Create highlighter
-const highlighter = await createHighlighter({
-  themes: ['github-dark-dimmed', 'github-light'],
-  langs: ['typescript', 'tsx', 'javascript', 'jsx'],
-});
+const langMap = {
+  typescript: 'ts',
+  javascript: 'js',
+} as const;
 
-// Generate type information if TypeScript
+const highlightLang = langMap[lang] ?? lang;
+
+// Reuse a singleton highlighter instance to avoid leaking Shiki highlighters
+const highlighter = await getHighlighter();
+
 let typeInfo = null;
-if (lang === 'typescript' || lang === 'tsx') {
-  try {
-    const twoslasher = createTwoslasher();
-    typeInfo = twoslasher(code, lang);
-  } catch (e) {
-    // Ignore type errors for demo code
+let twoslashMeta = null;
+
+const transformers: any[] = [
+  {
+    pre(node) {
+      const currentClass = node.properties.class;
+      const existing = Array.isArray(currentClass) ? currentClass.join(' ') : (currentClass ?? '');
+      const merged = [existing, 'not-prose overflow-x-auto'].filter(Boolean).join(' ');
+      node.properties.class = merged;
+    }
   }
+];
+
+if (useTwoslash) {
+  transformers.unshift(
+    transformerTwoslash({
+      rendererRich: {
+        classExtra: 'twoslash-rich',
+      },
+    })
+  );
+  transformers.push({
+    name: 'collect-twoslash-meta',
+    pre() {
+      twoslashMeta = this.meta.twoslash ?? null;
+    }
+  });
 }
 
 // Generate highlighted HTML
 const html = highlighter.codeToHtml(code, {
-  lang,
+  lang: highlightLang,
   theme: 'github-dark-dimmed',
-  transformers: [
-    {
-      pre(node) {
-        // Add custom classes
-        node.properties.class = 'not-prose overflow-x-auto';
-      }
-    }
-  ]
+  transformers,
 });
+
+if (useTwoslash && twoslashMeta) {
+  typeInfo = twoslashMeta;
+}
 
 const borderColor = variant === 'error' 
   ? 'border-warning-red/30 hover:border-warning-red/50' 
@@ -120,7 +143,7 @@ const lineNumbers = code.split('\n').length;
   }
 
   .syntax-highlighted :global(code) {
-    font-family: 'JetBrains Mono', Monaco, Consolas, monospace;
+    font-family: 'x14y24pxHeadUpDaisy', 'JetBrains Mono', 'SF Mono', Consolas, monospace;
     font-size: 0.875rem;
     line-height: 1.5;
   }
