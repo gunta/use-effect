@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 import { IconButton } from './IconButton.tsx';
 import { IconDisplay } from './IconDisplay.tsx';
+import FaultyTerminal from './FaultyTerminal.tsx';
 import ReactLogo from '../images/React_dark.svg';
 import EffectLogo from '../images/Effect TS_dark.svg';
 ---
@@ -150,6 +151,30 @@ import EffectLogo from '../images/Effect TS_dark.svg';
         <a href="https://www.youtube.com/@effect-ts" class="text-electric-blue hover:underline">Effect YouTube Channel →</a>
       </p>
     </footer>
+
+    <div class="relative mt-16 h-[560px] w-full overflow-hidden rounded-3xl border border-electric-blue/25 bg-black/60 backdrop-blur-xl shadow-[0_60px_140px_rgba(14,165,233,0.22)]">
+      <FaultyTerminal
+        client:visible
+        scale={1.5}
+        gridMul={[2, 1]}
+        digitSize={1.2}
+        timeScale={1}
+        pause={false}
+        scanlineIntensity={1}
+        glitchAmount={1}
+        flickerAmount={1}
+        noiseAmp={1}
+        chromaticAberration={0}
+        dither={0}
+        curvature={0}
+        tint="#ffffff"
+        mouseReact={true}
+        mouseStrength={0.5}
+        pageLoadAnimation={false}
+        brightness={1}
+      />
+      <div class="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-electric-blue/10 to-black opacity-70 mix-blend-screen"></div>
+    </div>
   </div>
 </section>
 

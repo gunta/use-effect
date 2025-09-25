@@ -1,79 +1,32 @@
-import React, { useEffect, useState } from 'react';
+import React, { useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AlertCircle, TrendingUp, DollarSign, Frown, TrendingUpIcon, Banknote } from 'lucide-react';
+import { useCounterValue } from '../lib/counterStore';
 
 interface CounterProps {
   type: 'incident' | 'global' | 'money';
 }
 
 export const AnimatedCounter: React.FC<CounterProps> = ({ type }) => {
-  const [incidentCounter, setIncidentCounter] = useState(0);
-  const [globalCounter, setGlobalCounter] = useState(2847293847);
-  const [moneyCounter, setMoneyCounter] = useState(847);
+  const rawValue = useCounterValue(type);
 
-  useEffect(() => {
-    if (type !== 'global' || typeof window === 'undefined') {
-      return;
+  const formattedValue = useMemo(() => {
+    if (type === 'incident') {
+      return rawValue;
     }
 
-    let animationId = 0;
-
-    const animate = () => {
-      setGlobalCounter(prev => prev + Math.floor(Math.random() * 1000) + 500);
-      animationId = window.requestAnimationFrame(animate);
-    };
-
-    animationId = window.requestAnimationFrame(animate);
-
-    return () => {
-      window.cancelAnimationFrame(animationId);
-    };
-  }, [type]);
-
-  useEffect(() => {
-    if (type !== 'money' || typeof window === 'undefined') {
-      return;
+    if (type === 'global') {
+      return Number(rawValue).toLocaleString();
     }
 
-    const intervalId = window.setInterval(() => {
-      setMoneyCounter(prev => prev + Math.random() * 0.1);
-    }, 1000);
-
-    return () => {
-      window.clearInterval(intervalId);
-    };
-  }, [type]);
-
-  useEffect(() => {
-    if (type !== 'incident' || typeof window === 'undefined') {
-      return;
-    }
-
-    let timeoutId = 0;
-
-    const triggerReset = () => {
-      setIncidentCounter(1);
-      timeoutId = window.setTimeout(() => setIncidentCounter(0), 2000);
-    };
-
-    triggerReset();
-
-    const intervalId = window.setInterval(() => {
-      window.clearTimeout(timeoutId);
-      triggerReset();
-    }, 10000);
-
-    return () => {
-      window.clearInterval(intervalId);
-      window.clearTimeout(timeoutId);
-    };
-  }, [type]);
+    return `$${Number(rawValue).toFixed(1)}M`;
+  }, [rawValue, type]);
 
   const configs = {
     incident: {
       icon: AlertCircle,
       title: 'DAYS SINCE LAST\nuseEffect INCIDENT',
-      value: incidentCounter,
+      value: formattedValue,
       color: 'text-warning-red',
       bgColor: 'from-warning-red/20 to-warning-red/5',
       borderColor: 'border-warning-red/30',
@@ -83,7 +36,7 @@ export const AnimatedCounter: React.FC<CounterProps> = ({ type }) => {
     global: {
       icon: TrendingUp,
       title: 'GLOBAL useEffect\nCALLS RIGHT NOW',
-      value: globalCounter.toLocaleString(),
+      value: formattedValue,
       color: 'text-electric-blue', 
       bgColor: 'from-electric-blue/20 to-electric-blue/5',
       borderColor: 'border-electric-blue/30',
@@ -93,7 +46,7 @@ export const AnimatedCounter: React.FC<CounterProps> = ({ type }) => {
     money: {
       icon: DollarSign,
       title: 'MONEY LOST TO\nuseEffect BUGS',
-      value: `$${moneyCounter.toFixed(1)}M`,
+      value: formattedValue,
       color: 'text-green-400',
       bgColor: 'from-green-400/20 to-green-400/5', 
       borderColor: 'border-green-400/30',
@@ -105,6 +58,7 @@ export const AnimatedCounter: React.FC<CounterProps> = ({ type }) => {
   const config = configs[type];
   const Icon = config.icon;
   const SubtitleIcon = config.subtitleIcon;
+  const valueKey = `${type}-${formattedValue}`;
 
   return (
     <motion.div
@@ -127,7 +81,7 @@ export const AnimatedCounter: React.FC<CounterProps> = ({ type }) => {
       
       <AnimatePresence mode="wait">
         <motion.div
-          key={config.value}
+          key={valueKey}
           initial={{ scale: 1.5, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.5, opacity: 0 }}
