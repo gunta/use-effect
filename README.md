@@ -102,16 +102,26 @@ Share the message:
 ```bash
 # Build for production
 npm run build
+# or
+bun run build
 
 # Preview production build
 npm run preview
 ```
 
-Deploy to any static hosting:
+### GitHub Pages (automatic)
+
+1. Push to the `main` branch – the included `Deploy to GitHub Pages` workflow builds with Bun and publishes `dist/`.
+2. In **Settings → Pages**, choose **GitHub Actions** as the source the first time.
+3. The workflow automatically detects whether the repository is a user/organization page or a project page and adjusts the Astro `base`/`site` settings through environment variables.
+4. Your site is available at the URL printed in the workflow summary (usually `https://<user>.github.io/<repo>`).
+
+### Other static hosts
+
 - Vercel
 - Netlify
 - Cloudflare Pages
-- GitHub Pages
+- Any provider that serves the `dist/` folder
 
 ## 🤝 Contributing
 
